@@ -4,4 +4,6 @@ public class Tuile {
     Tuile(String c){
         color = c;
     }
+
+    String getCouleur(){return color;}
 }
