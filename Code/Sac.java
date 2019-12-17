@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 import java.util.Collections;
-public class Sac {
+public class Sac extends Zone{
     private ArrayList<Tuile> sac;
 
     public Sac(){
@@ -20,5 +20,10 @@ public class Sac {
         }
         Collections.shuffle(sac);
     }
+
+    public ArrayList<Tuile> getSac() {
+        return sac;
+    }
+
     boolean estVide(){return sac.isEmpty();}
 }

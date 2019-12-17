@@ -1,4 +1,4 @@
-public class PlateauJoueur {
+public class PlateauJoueur extends Zone{
     private Case[] plancher;
     private int score;
 
