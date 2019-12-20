@@ -7,9 +7,14 @@ public class Joueur {
     private int score; //Chaque joueur possède un score qui lui est propre
 
 
+    LigneMotif getLigne (){return l;}
+    Mur getMur(){return m;}
+    Plancher getPlancher(){return p;}
+
     Joueur() {
         m = new Mur();
         l = new LigneMotif();
+        p = new Plancher();
         score = 0;
     }
 
@@ -25,8 +30,6 @@ public class Joueur {
 
     public static void main(String[] args) {
         Joueur j = new Joueur();
-        Plancher p = new Plancher();
-        for(CasePlancher c : p.p) System.out.println(c);
     }
 
     void updateScore() {
@@ -41,7 +44,7 @@ public class Joueur {
         score = n;
     }
 
-    static class Mur { //Le mur du joueur est une classe interne étant donné qu'il n'est accessible que par le biais du joueur directement
+    class Mur { //Le mur du joueur est une classe interne étant donné qu'il n'est accessible que par le biais du joueur directement
         CaseMur[][] m;
 
         Mur() {
@@ -134,7 +137,7 @@ public class Joueur {
             return sco;
         }
 
-        boolean estRemplie(int ligne, String couleur) {
+        boolean estRemplie(int ligne, String couleur) { //Vérifie que la ligne "ligne" du mur n'a pas déjà été remplie avec une certaine couleur
             for (CaseMur c : m[ligne]) {
                 if (c.couleur.equals(couleur)) if (!c.estVide()) return true;
             }
@@ -156,7 +159,7 @@ public class Joueur {
         }
     }
 
-    static class LigneMotif {
+    class LigneMotif {
         Case[][] li;
 
         LigneMotif() {
@@ -170,6 +173,8 @@ public class Joueur {
                 }
             }
         }
+
+        int taille() {return li.length;}
 
         boolean estVide(int ligne) {
             for (Case c : li[ligne]) {
@@ -188,11 +193,13 @@ public class Joueur {
         boolean remplirLigne(Tuile t, int ligne) {
             if(!estVide(ligne)) {
                 if (couleurLigne(ligne).equals(t.getCouleur())) {
-                    if (!lignePleine(ligne)) {
-                        for (Case c : li[ligne]) {
-                            if (c.estVide()) {
-                                c.setTuile(t);
-                                return true;
+                    if (!(m.estRemplie(ligne, t.getCouleur()))) {
+                        if (!lignePleine(ligne)) {
+                            for (Case c : li[ligne]) {
+                                if (c.estVide()) {
+                                    c.setTuile(t);
+                                    return true;
+                                }
                             }
                         }
                     }
@@ -216,7 +223,7 @@ public class Joueur {
         }
     }
 
-    static class Plancher {
+    class Plancher {
         private CasePlancher[] p;
 
         Plancher() {

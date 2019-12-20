@@ -4,13 +4,17 @@ public class Jeu {
     Plateau plate;
 
     Jeu(){
-        System.out.println("Combien de joueurs voulez vous ?");
-        java.util.Scanner sc = new java.util.Scanner(System.in);
-        String nb = sc.next();
-        System.out.println("Il y aura donc " + nb + " joueurs.");
         plate = new Plateau();
         sac = new Sac();
         def = new Defausse();
+        jouer();
+    }
+
+
+    public void jouer(){
+        while(!plate.partieFinie()){
+            
+        }
     }
 
     public boolean allEmpty(){return sac.estVide() && def.estVide();}
@@ -21,11 +25,16 @@ public class Jeu {
             }
         }
     }
+
     public void remplirSac(){
         if(sac.estVide()){
             while(!def.estVide()){
                 def.envoyer();
             }
         }
+    }
+
+    public static void main(String[] args) {
+        Jeu j = new Jeu();
     }
 }

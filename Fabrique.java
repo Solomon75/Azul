@@ -8,9 +8,19 @@ public class Fabrique {
         }
     }
 
-    void remplirLigneMotif(Joueur.LigneMotif l, int ligne){
-        if(!l.lignePleine(ligne)){
+    boolean remplirLigneMotif(Joueur.LigneMotif l, int ligne, Tuile t){
+        for(Case c : fab){
+            if (t.getCouleur().equals(c.getTuile().getCouleur())){
+                l.remplirLigne(c.getTuile(), ligne);
+            }
+        }
+        if (estVide()) return true;
+        return false;
+    }
 
+    void remplirCentre(Centre c){
+        for(Case ca : fab){
+            if(!ca.estVide()) c.remplirCentre(ca.getTuile());
         }
     }
 
@@ -27,6 +37,10 @@ public class Fabrique {
             if(fab[i].estVide()) fab[i].setTuile(s.envoyer());
             i++;
         }
+    }
+
+    boolean estVide(){
+        return !(estPleine());
     }
 
     public static void main(String[] args) {
