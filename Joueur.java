@@ -1,4 +1,5 @@
 import java.util.LinkedList;
+import java.util.Scanner;
 
 public class Joueur {
     private Plancher p;
@@ -10,7 +11,20 @@ public class Joueur {
     Joueur() {
         m = new Mur();
         l = new LigneMotif();
+        p = new Plancher();
         score = 0;
+    }
+
+    public static void main(String[] args) {
+        Joueur j = new Joueur();
+    }
+
+    LigneMotif getLigne() {
+        return l;
+    }
+
+    Mur getMur() {
+        return m;
     }
 
     /*void printWall(){
@@ -23,10 +37,8 @@ public class Joueur {
         }
     }*/
 
-    public static void main(String[] args) {
-        Joueur j = new Joueur();
-        Plancher p = new Plancher();
-        for(CasePlancher c : p.p) System.out.println(c);
+    Plancher getPlancher() {
+        return p;
     }
 
     void updateScore() {
@@ -41,7 +53,7 @@ public class Joueur {
         score = n;
     }
 
-    static class Mur { //Le mur du joueur est une classe interne étant donné qu'il n'est accessible que par le biais du joueur directement
+    class Mur { //Le mur du joueur est une classe interne étant donné qu'il n'est accessible que par le biais du joueur directement
         CaseMur[][] m;
 
         Mur() {
@@ -108,7 +120,7 @@ public class Joueur {
             else if (i == m.length - 1)
                 nb++;
             return nb;
-        } //On compte par combien de tuiles adjacentes la case spécifiée est entourée.
+        } //On compte par combien la case spécifiée a de tuiles adjacentes.
 
         int scoreLigne(int i) {
             int sco = 0;
@@ -134,7 +146,7 @@ public class Joueur {
             return sco;
         }
 
-        boolean estRemplie(int ligne, String couleur) {
+        boolean estRemplie(int ligne, String couleur) { //Vérifie que la ligne "ligne" du mur n'a pas déjà été remplie avec une certaine couleur
             for (CaseMur c : m[ligne]) {
                 if (c.couleur.equals(couleur)) if (!c.estVide()) return true;
             }
@@ -143,12 +155,10 @@ public class Joueur {
 
         boolean remplirCase(Tuile t, LigneMotif l) {
             for (int i = 0; i < m.length; i++) {
-                if (l.lignePleine(i)) {
-                    for (CaseMur c : m[i]) {
-                        if (c.sameColor(t) && !estRemplie(i, c.getCouleur())) {
-                            c.setTuile(l.li[i][0].getTuile());
-                            return true;
-                        }
+                for (CaseMur c : m[i]) {
+                    if (c.sameColor(t) && !estRemplie(i, c.getCouleur())) {
+                        c.setTuile(l.li[i][0].getTuile());
+                        return true;
                     }
                 }
             }
@@ -156,19 +166,21 @@ public class Joueur {
         }
     }
 
-    static class LigneMotif {
+    class LigneMotif {
         Case[][] li;
 
         LigneMotif() {
             li = new Case[5][];
-            for (int i = 0; i < li.length; i++) {
-                li[i] = new Case[i + 1];
-            }
-            for (Case[] c : li) {
-                for (Case ca : c) {
-                    ca = new Case();
+            for(int i = 0; i < li.length; i++){
+                li[i] = new Case[i+1];
+                for(int j = 0; j < li[i].length; j++){
+                    li[i][j] = new Case();
                 }
             }
+        }
+
+        int taille(int i) {
+            return li[i].length;
         }
 
         boolean estVide(int ligne) {
@@ -179,32 +191,34 @@ public class Joueur {
         }
 
         String couleurLigne(int i) {
-            for (Case c : li[i]) {
-                if (!c.estVide()) return c.getTuile().getCouleur();
+            for (int j = 0; j < li[i].length; j++) {
+                if (!li[i][j].estVide()) return li[i][j].getTuile().getCouleur();
             }
             return "vide";
         }
 
         boolean remplirLigne(Tuile t, int ligne) {
-            if(!estVide(ligne)) {
+            if (!estVide(ligne)) {
                 if (couleurLigne(ligne).equals(t.getCouleur())) {
-                    if (!lignePleine(ligne)) {
-                        for (Case c : li[ligne]) {
-                            if (c.estVide()) {
-                                c.setTuile(t);
-                                return true;
+                    if (!(m.estRemplie(ligne, t.getCouleur()))) {
+                        if (!lignePleine(ligne)) {
+                            for (Case c : li[ligne]) {
+                                if (c.estVide()) {
+                                    c.setTuile(t);
+                                    return true;
+                                }
                             }
                         }
                     }
                 }
             } else {
-                    for (Case c : li[ligne]) {
-                        if (c.estVide()) {
-                            c.setTuile(t);
-                            return true;
-                        }
+                for (Case c : li[ligne]) {
+                    if (c.estVide()) {
+                        c.setTuile(t);
+                        return true;
                     }
                 }
+            }
             return false;
         }
 
@@ -214,24 +228,35 @@ public class Joueur {
             }
             return true;
         }
+
+        public String toString(){
+            String ret = "";
+            for(int j = 0; j < li.length; j++){
+                for(int i = 0; i < li[j].length; i++){
+                    ret = ret + li[j][i] + " ";
+                }
+                ret = ret + "\n";
+            }
+            return ret;
+        }
     }
 
-    static class Plancher {
+    class Plancher {
         private CasePlancher[] p;
 
         Plancher() {
             p = new CasePlancher[7];
-            for(int i = 0; i < p.length; i++){
+            for (int i = 0; i < p.length; i++) {
                 if (i < 2) p[i] = new CasePlancher(1);
                 if (i >= 2 && i < 4) p[i] = new CasePlancher(2);
                 if (i >= 4) p[i] = new CasePlancher(3);
             }
         }
 
-        int retrait(){
+        int retrait() {
             int ret = 0;
-            for(CasePlancher c : p){
-                if(!c.estVide()) ret+=c.getRedux();
+            for (CasePlancher c : p) {
+                if (!c.estVide()) ret += c.getRedux();
             }
             return ret;
         }

@@ -7,4 +7,7 @@ public class Tuile {
 
     String getCouleur(){return color;}
 
+    boolean sameCol(Tuile t){
+        return color.equals(t.color);
+    }
 }
