@@ -8,6 +8,10 @@ public class Joueur {
     private int score; //Chaque joueur possède un score qui lui est propre
 
 
+    LigneMotif getLigne (){return l;}
+    Mur getMur(){return m;}
+    Plancher getPlancher(){return p;}
+
     Joueur() {
         m = new Mur();
         l = new LigneMotif();
@@ -37,8 +41,13 @@ public class Joueur {
         }
     }*/
 
+<<<<<<< HEAD
     Plancher getPlancher() {
         return p;
+=======
+    public static void main(String[] args) {
+        Joueur j = new Joueur();
+>>>>>>> 633e055c3788e5a2b60e364200b30e2b61352b23
     }
 
     void updateScore() {
@@ -179,9 +188,13 @@ public class Joueur {
             }
         }
 
+<<<<<<< HEAD
         int taille(int i) {
             return li[i].length;
         }
+=======
+        int taille() {return li.length;}
+>>>>>>> 633e055c3788e5a2b60e364200b30e2b61352b23
 
         boolean estVide(int ligne) {
             for (Case c : li[ligne]) {

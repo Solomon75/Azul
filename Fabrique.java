@@ -10,6 +10,7 @@ public class Fabrique {
         }
     }
 
+<<<<<<< HEAD
     Case getCase(int t){
         return fab[t];
     }
@@ -27,13 +28,25 @@ public class Fabrique {
                 l.remplirLigne(c.getTuile(), ligne);
                 c.setTuile(null);
         if (c.estVide()) return true;
+=======
+    boolean remplirLigneMotif(Joueur.LigneMotif l, int ligne, Tuile t){
+        for(Case c : fab){
+            if (t.getCouleur().equals(c.getTuile().getCouleur())){
+                l.remplirLigne(c.getTuile(), ligne);
+            }
+        }
+        if (estVide()) return true;
+>>>>>>> 633e055c3788e5a2b60e364200b30e2b61352b23
         return false;
     }
 
     void remplirCentre(Centre c){
         for(Case ca : fab){
             if(!ca.estVide()) c.remplirCentre(ca.getTuile());
+<<<<<<< HEAD
             ca.setTuile(null);
+=======
+>>>>>>> 633e055c3788e5a2b60e364200b30e2b61352b23
         }
     }
 
@@ -56,6 +69,7 @@ public class Fabrique {
         return !(estPleine());
     }
 
+<<<<<<< HEAD
     public String toString(){
         String ret = "";
         for(int i = 0; i < fab.length-1; i++){
@@ -65,6 +79,8 @@ public class Fabrique {
         return ret;
     }
 
+=======
+>>>>>>> 633e055c3788e5a2b60e364200b30e2b61352b23
     public static void main(String[] args) {
         Sac s = new Sac();
         Fabrique f = new Fabrique();

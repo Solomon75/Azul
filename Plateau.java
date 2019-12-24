@@ -12,6 +12,7 @@ public class Plateau {
             System.out.println("Combien de joueurs ? (De 2 à 4)");
             java.util.Scanner sc = new java.util.Scanner(System.in);
             String s = sc.next();
+<<<<<<< HEAD
             switch (s) {
                 case "2":
                     fabs = new Fabrique[5];
@@ -24,11 +25,24 @@ public class Plateau {
                 case "4":
                     fabs = new Fabrique[9];
                     joueurs = new Joueur[Integer.parseInt(s)];
+=======
+            joueurs = new Joueur[Integer.parseInt(s)];
+            switch (s) {
+                case "2":
+                    fabs = new Fabrique[5];
+                    break;
+                case "3":
+                    fabs = new Fabrique[7];
+                    break;
+                case "4":
+                    fabs = new Fabrique[9];
+>>>>>>> 633e055c3788e5a2b60e364200b30e2b61352b23
                     break;
                 default:
                     System.out.println("Nombre incorrect");
                     break;
             }
+<<<<<<< HEAD
         }
         for(int i = 0; i < joueurs.length; i++){
             joueurs[i] = new Joueur();
@@ -37,6 +51,10 @@ public class Plateau {
             fabs[i] = new Fabrique();
         }
         centre = new Centre(3*fabs.length+1);
+=======
+        }
+        centre = new Centre(4*fabs.length+1);
+>>>>>>> 633e055c3788e5a2b60e364200b30e2b61352b23
     }
 
     public Centre getCentre() {
@@ -51,6 +69,7 @@ public class Plateau {
         return joueurs;
     }
 
+<<<<<<< HEAD
     int premierJoueur(){
         Random rd = new Random();
         return rd.nextInt((joueurs.length-1) + 1);
@@ -60,12 +79,19 @@ public class Plateau {
         for(Joueur j : joueurs){
             for(int i = 0; i < 5; i++) {
                 if (j.getMur().lignePleine(i)){
+=======
+    public boolean partieFinie(){
+        for(Joueur j : joueurs){
+            for(int i = 0; i < j.getLigne().taille(); i++) {
+                if (j.getLigne().lignePleine(i)){
+>>>>>>> 633e055c3788e5a2b60e364200b30e2b61352b23
                     return true;
                 }
             }
         }
         return false;
     }
+<<<<<<< HEAD
 
     public String toString(){
         String fabriques = Arrays.toString(fabs);
@@ -146,4 +172,6 @@ public class Plateau {
             action(player);
         }
     }
+=======
+>>>>>>> 633e055c3788e5a2b60e364200b30e2b61352b23
 }

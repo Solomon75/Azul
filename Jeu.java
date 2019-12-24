@@ -3,11 +3,25 @@ public class Jeu {
     Defausse def;
     Plateau plate;
 
+<<<<<<< HEAD
     Jeu() {
+=======
+    Jeu(){
+>>>>>>> 633e055c3788e5a2b60e364200b30e2b61352b23
         plate = new Plateau();
         sac = new Sac();
         def = new Defausse();
         jouer();
+<<<<<<< HEAD
+=======
+    }
+
+
+    public void jouer(){
+        while(!plate.partieFinie()){
+            
+        }
+>>>>>>> 633e055c3788e5a2b60e364200b30e2b61352b23
     }
 
     public static void main(String[] args) {
@@ -39,11 +53,21 @@ public class Jeu {
         }
     }
 
+<<<<<<< HEAD
     public void remplirSac() {
         if (sac.estVide()) {
             while (!def.estVide()) {
+=======
+    public void remplirSac(){
+        if(sac.estVide()){
+            while(!def.estVide()){
+>>>>>>> 633e055c3788e5a2b60e364200b30e2b61352b23
                 def.envoyer();
             }
         }
+    }
+
+    public static void main(String[] args) {
+        Jeu j = new Jeu();
     }
 }
