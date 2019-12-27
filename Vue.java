@@ -1,49 +1,79 @@
+package Azul;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 
 public class Vue extends JFrame {
-    int espace = 5;
-    int nbJoueur = 1;
-    public Vue(){
-        setSize(1300,840);
-        setResizable(false);
-        murScore();
-        Board b = new Board();
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setContentPane(b);
-    }
+    JPanel imageDeFond = new JPanel();
+    Image img = ImageIO.read(new File("E:\\Users\\Medine\\Bureau\\imageTuiles\\backTile.png"));
+    Image plateauJoueur = ImageIO.read(new File("E:\\Users\\Medine\\Bureau\\imageTuiles\\PlateauJoueur.png"));
+    public Vue() throws IOException {
+        this.setSize(1000,1000);
+        this.setLocationRelativeTo(null);
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.setVisible(true);
 
-    public void murScore(){
-        Box b;
-        b = new Box(0);
-        b.setBackground(Color.BLACK);
-        add(b);
-    }
-
-    public void lignesMotif(){
+        initBackgroundImage();
+        this.setLayout(null);
+        this.add(PlateauJoueur(50,50));
 
     }
 
-    public void Plancher(){
+    // Permet de mettre une image en backgroun et d'occuper la totalité de la fenetre.
+    public void initBackgroundImage(){
 
-    }
-
-    public class Board extends JPanel{
-        public void paintComponent(Graphics g){
-            g.setColor(Color.DARK_GRAY);
-            g.fillRect(0,0,1300,840);
-            g.setColor(Color.gray);
-            for (int i = 0; i < 16; i++){
-                for (int j = 0; j < 9; j++){
-                    g.fillRect((espace+i*40)/nbJoueur,(espace+j*40+40)/nbJoueur,(40-nbJoueur*espace)/nbJoueur,(40-nbJoueur*espace)/nbJoueur);
-                }
+        this.setContentPane(new JPanel() {
+            @Override
+            public void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.drawImage(img, 0, 0, this.getWidth(),this.getHeight(),this);
             }
-        }
+        });
+        this.getContentPane().setLayout(null);
     }
 
-    public static void main(String[] args) {
-        Vue v = new Vue();
-        v.setVisible(true);
+    /*
+        Créer un plateau Joueur avec tous les JPanel bien placé, j'ai mis
+        des borderLines pour qu'on s'y retrouve. Les parametres x et y
+        permettent de définir la position d'un plateau joueur sur notre Vue.
+    */
+
+    public JPanel PlateauJoueur(int x, int y){
+        JPanel plateauJoueurContainer = new JPanel(null);
+        JPanel pisteDeScoreContainer = new JPanel(null);
+        JPanel lignesMotifContainer = new JPanel(null);
+        JPanel murTuilesContainer = new JPanel(null);
+        JPanel plancherContainer = new JPanel(null);
+        plateauJoueurContainer.add(pisteDeScoreContainer);
+        plateauJoueurContainer.add(lignesMotifContainer);
+        plateauJoueurContainer.add(murTuilesContainer);
+        plateauJoueurContainer.add(plancherContainer);
+
+        pisteDeScoreContainer.setBorder(BorderFactory.createLineBorder(Color.GREEN,10));
+        plateauJoueurContainer.setBounds(x,x,300,350);
+
+        plateauJoueurContainer.setBorder(BorderFactory.createLineBorder(Color.BLACK,10));
+        pisteDeScoreContainer.setBounds(0,0,300,100);
+
+        lignesMotifContainer.setBorder(BorderFactory.createLineBorder(Color.BLUE,10));
+        lignesMotifContainer.setBounds(0,100,150,150);
+
+        murTuilesContainer.setBorder(BorderFactory.createLineBorder(Color.MAGENTA,10));
+        murTuilesContainer.setBounds(150,100,150,150);
+
+        plancherContainer.setBorder(BorderFactory.createLineBorder(Color.red,10));
+        plancherContainer.setBounds(0,250,300,100);
+        return plateauJoueurContainer;
+    }
+
+
+
+    public static void main(String[] args) throws IOException {
+        new Vue();
     }
 
 }
