@@ -50,5 +50,6 @@ public class Fabrique {
         f.ajouter(s);
         for(Case c : f.fab) System.out.println(c);
         System.out.println(s.taille());
+
     }
 }
