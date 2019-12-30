@@ -167,9 +167,9 @@ public class Joueur {
             for (int i = 0; i < li.length; i++) {
                 li[i] = new Case[i + 1];
             }
-            for (Case[] c : li) {
-                for (Case ca : c) {
-                    ca = new Case();
+            for (int i = 0; i < li.length; i++) {
+                for (int j = 0; j < li[i].length; j++) {
+                    li[i][j] = new Case();
                 }
             }
         }
@@ -185,7 +185,8 @@ public class Joueur {
 
         String couleurLigne(int i) {
             for (Case c : li[i]) {
-                if (!c.estVide()) return c.getTuile().getCouleur();
+                if (!c.estVide())
+                    return c.getTuile().getCouleur();
             }
             return "vide";
         }
