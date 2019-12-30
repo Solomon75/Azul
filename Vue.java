@@ -145,11 +145,13 @@ public class Vue extends JFrame {
                 LigneMotif c = (LigneMotif) b.getParent();
                 int id = c.id;
                 j.getLigne().remplirLigne(new Tuile("rouge"),4);
-                boolean verif = true;
-                if (j.getLigne().couleurLigne(id).equals("blue")) {
-                    System.out.println(j.getLigne().remplirLigne(new Tuile("bleu"),id));
+                System.out.println(j.getLigne().couleurLigne(4));
+                boolean verif = false;
+                if (j.getLigne().couleurLigne(id).equals("vide")) {
+                    verif = true;
+                    j.getLigne().remplirLigne(new Tuile("bleu"),id);
+                    System.out.println(j.getLigne().couleurLigne(4));
                 }
-                System.out.println(verif);
 
                 /**
                  * Des simples test que j'ai réalisé sans grandes importances.
