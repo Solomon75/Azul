@@ -11,10 +11,10 @@ public class Vue extends JFrame {
     Joueur j = new Joueur();
     Joueur.LigneMotif ligneMotif = j.new LigneMotif();
 
-    Image img = ImageIO.read(new File("imageTuiles\\backTile.png"));
-    //Image plateauJoueur = ImageIO.read(new File("E:\\Users\\Medine\\Bureau\\imageTuiles\\PlateauJoueur.png"));
-    Image tuile = ImageIO.read(new File("imageTuiles\\blue.png"));
-    Image red = ImageIO.read(new File("imageTuiles\\red.png"));
+    Image img = ImageIO.read(new File("imageTuiles/backTile.png"));
+    //Image plateauJoueur = ImageIO.read(new File("imageTuiles/PlateauJoueur.png"));
+    Image tuile = ImageIO.read(new File("imageTuiles/blue.png"));
+    Image red = ImageIO.read(new File("imageTuiles/red.png"));
 
     public Vue() throws IOException {
         this.setSize(1000,1000);
@@ -33,7 +33,7 @@ public class Vue extends JFrame {
         */
     }
 
-    // Permet de mettre une image en backgroun et d'occuper la totalité de la fenetre.
+    // Permet de mettre une image en background et d'occuper la totalité de la fenetre.
     public void initBackgroundImage(){
 
         this.setContentPane(new JPanel() {
