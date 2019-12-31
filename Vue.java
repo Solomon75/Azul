@@ -7,10 +7,14 @@ import java.io.File;
 import java.io.IOException;
 
 public class Vue extends JFrame {
-    
-    JPanel imageDeFond = new JPanel();
-    Image img = ImageIO.read(new File("imageTuiles\\backTile.png"));
-    //Image plateauJoueur = ImageIO.read(new File("E:\\Users\\Medine\\Bureau\\imageTuiles\\PlateauJoueur.png"));
+    Controleur controleur = new Controleur();
+    Joueur j = new Joueur();
+    Joueur.LigneMotif ligneMotif = j.new LigneMotif();
+
+    Image img = ImageIO.read(new File("imageTuiles/backTile.png"));
+    //Image plateauJoueur = ImageIO.read(new File("imageTuiles/PlateauJoueur.png"));
+    Image tuile = ImageIO.read(new File("imageTuiles/blue.png"));
+    Image red = ImageIO.read(new File("imageTuiles/red.png"));
 
     public Vue() throws IOException {
         this.setSize(1000,1000);
@@ -20,7 +24,7 @@ public class Vue extends JFrame {
 
         initBackgroundImage();
         this.setLayout(null);
-        this.add(PlateauJoueur(50,50));
+        //this.add(PlateauJoueur(50,50));
         /*
         JPanel jp = lignesMotifs();
         jp.setBounds(300,300,250,250);
@@ -48,7 +52,7 @@ public class Vue extends JFrame {
         permettent de définir la position d'un plateau joueur sur notre Vue.
     */
 
-    public JPanel PlateauJoueur(int x, int y){
+    /*public JPanel PlateauJoueur(int x, int y){
         JPanel plateauJoueurContainer = new JPanel(null);
         JPanel pisteDeScoreContainer = new JPanel(null);
         JPanel lignesMotifContainer = new JPanel(null);
@@ -67,7 +71,7 @@ public class Vue extends JFrame {
 
         lignesMotifContainer.setBorder(BorderFactory.createLineBorder(Color.BLUE,10));
         lignesMotifContainer.setBounds(0,100,150,150);
-        JPanel jp = lignesMotifs();
+        JPanel jp = initContainerLigneMotif();
         jp.setBounds(0,0,150,150);
         jp.setBorder(BorderFactory.createLineBorder(Color.GREEN,1));
         lignesMotifContainer.add(jp);
@@ -80,56 +84,108 @@ public class Vue extends JFrame {
         return plateauJoueurContainer;
     }
 
+    public JPanel initContainerLigneMotif(){
+        int i;
+        int id = 0;
+        JPanel jp = new JPanel(new GridLayout(5,0));
+        LigneMotif line;
+        Case uneCase;
+        for (i = 1; i <= 5; i++){
+            line = new LigneMotif(id);
+            line.setLayout(new GridLayout(1,i));
 
-    /*
-        permet (provisoirement) de créer les lignes motifs et de les placer dans un JPanel qu'on retourne ensuite.
-     */
-    public JPanel lignesMotifs(){
-        JLabel lignesMotif [] = new JLabel[15];
-        for (int i = 0; i < 15; i++){
-            lignesMotif[i] = new JLabel();
+            for (int j = 0; j < i; j++){
+                uneCase = new Case();
+                uneCase.setSize(10,10);
+                line.add(uneCase);
+                uneCase.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
+            }
+            jp.add(line);
+            line.setBorder(BorderFactory.createLineBorder(Color.GREEN,1));
+            id++;
+        }
+        return jp;
+    }*/
+
+    static class LigneMotif extends JPanel{
+        int id;
+        LigneMotif(int n){
+            id = n;
+        }
+    }
+
+    class Case extends JLabel implements MouseListener{
+
+        private String color = "black";
+
+        public String getColor() {
+            return color;
         }
 
-        JPanel containerLignesMotif = new JPanel();
-        // Ici il y a une erreur avec le gridLayout(), je reglerai ça plus tard !
-        containerLignesMotif.setLayout(new GridLayout(5,5));
-
-        for (JLabel l : lignesMotif){
-            l.setSize(5,5);
-            l.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
-            containerLignesMotif.add(l);
-            l.addMouseListener(new MouseListener() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    l.setOpaque(true);
-                    l.setBackground(Color.BLACK);
-                    System.out.println("Simple test");
-                }
-
-                @Override
-                public void mousePressed(MouseEvent e) {
-
-                }
-
-                @Override
-                public void mouseReleased(MouseEvent e) {
-
-                }
-
-                @Override
-                public void mouseEntered(MouseEvent e) {
-
-                }
-
-                @Override
-                public void mouseExited(MouseEvent e) {
-
-                }
-            });
+        Case(){
+            addMouseListener(this);
         }
 
+        @Override
+        public void mouseClicked(MouseEvent e) {
+/**
+ * Ici je cast l'événement source en case puis j'éffectue des opérations pour gerer
+ * mes différents
+ */
+                Case b = (Case) e.getSource();
+                // Permet de redimensionner l'image dans le jlabel
+                Image dimg = tuile.getScaledInstance(b.getWidth(), b.getHeight(),Image.SCALE_SMOOTH);
+                ImageIcon imageIcon = new ImageIcon(dimg);
+                // Jusque ici on redimensionne
 
-        return containerLignesMotif;
+                /**
+                 * Ici on récupère le numero de la ligne sur laquelle on à mis
+                 * une tuile.
+                 */
+                LigneMotif c = (LigneMotif) b.getParent();
+                int id = c.id;
+                j.getLigne().remplirLigne(new Tuile("rouge"),4);
+                System.out.println(j.getLigne().couleurLigne(4));
+                boolean verif = false;
+                if (j.getLigne().couleurLigne(id).equals("vide")) {
+                    verif = true;
+                    j.getLigne().remplirLigne(new Tuile("bleu"),id);
+                    System.out.println(j.getLigne().couleurLigne(4));
+                }
+
+                /**
+                 * Des simples test que j'ai réalisé sans grandes importances.
+                 */
+                if (b.getColor().equals("w")) {
+                    setOpaque(true);
+                    setIcon(new ImageIcon(tuile));
+                    System.out.println("Test");
+                }
+                else if(verif){
+                    setOpaque(true);
+                    setIcon(imageIcon);
+                }
+            }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+
+        }
     }
 
 

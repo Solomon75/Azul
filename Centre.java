@@ -15,4 +15,8 @@ public class Centre {
         }
         return false;
     }
+
+    public Case[] getCentre() {
+        return centre;
+    }
 }

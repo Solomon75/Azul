@@ -8,6 +8,10 @@ public class Fabrique {
         }
     }
 
+    Case getCase(int t){
+        return fab[t];
+    }
+
     boolean remplirLigneMotif(Joueur.LigneMotif l, int ligne, Tuile t){
         for(Case c : fab){
             if (t.getCouleur().equals(c.getTuile().getCouleur())){
