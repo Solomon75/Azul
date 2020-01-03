@@ -1,21 +1,39 @@
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class Joueur {
-    private Plancher p;
-    private Mur m;
-    private LigneMotif l;
-    private int score; //Chaque joueur possède un score qui lui est propre
+    Plancher p;
+    Mur m;
+    LigneMotif l;
+    MurGraph murG;
+    LigneMotifGraph lG;
+    PlancherGraph pG;
+    boolean prems = false;
 
+    int score; //Chaque joueur possède un score qui lui est propre
 
-    LigneMotif getLigne (){return l;}
-    Mur getMur(){return m;}
-    Plancher getPlancher(){return p;}
 
     Joueur() {
         m = new Mur();
         l = new LigneMotif();
         p = new Plancher();
         score = 0;
+    }
+
+    public static void main(String[] args) {
+        Joueur j = new Joueur();
+    }
+
+    MurGraph getMurG() {
+        return murG;
+    }
+
+    LigneMotif getLigne() {
+        return l;
+    }
+
+    Mur getMur() {
+        return m;
     }
 
     /*void printWall(){
@@ -28,8 +46,8 @@ public class Joueur {
         }
     }*/
 
-    public static void main(String[] args) {
-        Joueur j = new Joueur();
+    Plancher getPlancher() {
+        return p;
     }
 
     void updateScore() {
@@ -157,6 +175,13 @@ public class Joueur {
             }
             return false;
         }
+
+        public boolean tuileTrouve(int i, Tuile t) {
+            for (Case ca : m[i]) {
+                if (ca.getTuile().getCouleur().equals(t.getCouleur())) return true;
+            }
+            return false;
+        }
     }
 
     class LigneMotif {
@@ -174,7 +199,29 @@ public class Joueur {
             }
         }
 
-        int taille() {return li.length;}
+        public boolean videTuile(int i, Defausse d, Mur m) {
+            System.out.println("here1");
+            if(lignePleine(i)){
+                System.out.println("La ligne " + i + " est pleine.");
+                System.out.println(li[i][0].getTuile().getCouleur());
+                m.remplirCase(li[i][0].getTuile(), this);
+                clear(i, d);
+
+                return true;
+            }
+
+            return false;
+        }
+
+        void clear(int ligne, Defausse d){
+            for(Case ca : li[ligne]){
+                ca.clear(d);
+            }
+        }
+
+        int taille() {
+            return li.length;
+        }
 
         boolean estVide(int ligne) {
             for (Case c : li[ligne]) {
@@ -191,11 +238,11 @@ public class Joueur {
             return "vide";
         }
 
-        boolean remplirLigne(Tuile t, int ligne) {
-            if(!estVide(ligne)) {
-                if (couleurLigne(ligne).equals(t.getCouleur())) {
-                    if (!(m.estRemplie(ligne, t.getCouleur()))) {
-                        if (!lignePleine(ligne)) {
+        boolean remplirLigneT(Tuile t, int ligne) {
+            if(!estVide(ligne)) { //La ligne est-elle vide ?
+                if (couleurLigne(ligne).equals(t.getCouleur())) { //La tuile est elle de la même couleur que le reste de la ligne
+                    if (!(m.estRemplie(ligne, t.getCouleur()))) { //La couleur correspondante dans le mur est elle déjà remplie
+                        if (!lignePleine(ligne)) { //La ligne est elle pleine
                             for (Case c : li[ligne]) {
                                 if (c.estVide()) {
                                     c.setTuile(t);
@@ -216,6 +263,101 @@ public class Joueur {
             return false;
         }
 
+        public boolean possiblePath(int i, Tuile t){
+            if(!lignePleine(i) && !m.tuileTrouve(i, t)){
+                if(ligneVide(i)){
+                    return true;
+                }else{
+                    return couleurLigne(i).equals(t.getCouleur());
+                }
+            }
+            return false;
+        }
+
+        public boolean remplirLigneG(ArrayList<Tuile> tuiles, int i, Plancher p, Mur m, String couleur) {
+            // méthode générale pour remplir une ligne avec une ou plusieurs tuiles d'un coup
+            // A vérifier:
+            // si la ligne est complétement vide, il faut vérifier que la ligne du mur correspondant n'a pas déja une tuiles comme celle là.
+            Tuile t = new Tuile(couleur);
+            if (!m.tuileTrouve(i, t)) {
+                if (ligneVide(i)) {
+                    //vérifie que la tuile ne se trouve pas déja dans la ligne du mur
+                    // vérifier que le nombre de tuiles qu'on veut y mettre est acceptable sinon on met les restantes dans le plancher
+                    int h = 0;
+                    int j = 0;
+                    while (j < this.li[i].length && h < tuiles.size()) {
+                        li[i][j].setTuile(tuiles.get(h));
+                        li[i][j].getTuile().setColor(tuiles.get(h).getCouleur());
+                        h++;
+                        j++;
+                    }
+
+                    if (tuiles.size() > li[i].length) {
+                        //mettre le reste des tuiles dans le plancher
+                        // le plancher doit avoir assez de place.
+                        // il faudra réfléchir au cas où le plancher n'a pas assez de places libres. Je ne sais pas si ce cas est possible dans le jeu. Il suffirait de le vider à chaque fois qu'il se remplit
+                        // et garder le compte des points.
+                        ArrayList<Tuile> ty = new ArrayList<>();
+                        for (int k = j; k < tuiles.size(); k++) {
+                            ty.add(tuiles.get(k));
+                        }
+                        p.remplirPlancher(ty);
+
+                    }
+
+                    return true;
+                } else {
+                    //méthode qui compte le nombre de cases libres sur une ligne motif.
+                    //il faut vérifier que la tuile est de la meme couleur que le reste des autres tuiles déja présentes
+
+                    // vérifier que le nombre de tuiles qu'on veut y mettre est acceptable sinon on met les restantes dans le plancher
+                    int h = 0;
+                    int j = 0;
+                    while (j < li[i].length && h < tuiles.size()) {
+                        if (li[i][j].estVide()) {
+                            li[i][j].setTuile(tuiles.get(h));
+                            li[i][j].getTuile().setColor(tuiles.get(h).getCouleur());
+                            h++;
+                        }
+                        j++;
+                    }
+
+                    if (tuiles.size() > li[i].length) {
+                        ArrayList<Tuile> ty = new ArrayList<>();
+                        for (int k = j; k < tuiles.size(); k++) {
+                            ty.add(tuiles.get(k));
+                        }
+                        p.remplirPlancher(ty);
+                    }
+
+
+                    return true;
+                }
+                //vérifier si la ligne du mur correspondant ne contient pas déja le type de tuile qu'on veut lui mettre
+// il faut vérifier que les cases sont vides
+            } else {
+                System.out.println("Tuile déja remplie sur cette ligne!");
+                return false;
+            }
+        }
+
+        private boolean ligneVide(int i) {
+            for (Case c : li[i]) {
+                if (!c.estVide()) return false;
+            }
+            return true;
+        }
+
+        public int casesLibres(int i) {
+            int libres = 0;
+            for (Case c : li[i]) {
+                if (c.estVide()) {
+                    libres++;
+                }
+            }
+            return libres;
+        }
+
         boolean lignePleine(int i) {
             for (Case c : li[i]) {
                 if (!c.estVide()) return false;
@@ -229,19 +371,37 @@ public class Joueur {
 
         Plancher() {
             p = new CasePlancher[7];
-            for(int i = 0; i < p.length; i++){
+            for (int i = 0; i < p.length; i++) {
                 if (i < 2) p[i] = new CasePlancher(1);
                 if (i >= 2 && i < 4) p[i] = new CasePlancher(2);
                 if (i >= 4) p[i] = new CasePlancher(3);
             }
         }
 
-        int retrait(){
+        int retrait() {
             int ret = 0;
-            for(CasePlancher c : p){
-                if(!c.estVide()) ret+=c.getRedux();
+            for (CasePlancher c : p) {
+                if (!c.estVide()) ret += c.getRedux();
             }
             return ret;
+        }
+
+        public boolean remplirPlancher(ArrayList<Tuile> ty) {
+            for (CasePlancher cp : p) {
+                if (cp.estVide() && !ty.isEmpty()) {
+                    cp.setTuile(ty.remove(0));
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        void clear (Defausse d){
+            for(Case ca : p){
+                if(!ca.estVide()){
+                    ca.clear(d);
+                }
+            }
         }
     }
 }

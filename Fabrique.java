@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Fabrique {
     Case[]fab;
 
@@ -12,10 +14,10 @@ public class Fabrique {
         return fab[t];
     }
 
-    boolean remplirLigneMotif(Joueur.LigneMotif l, int ligne, Tuile t){
+    boolean remplirLigneMotifT(Joueur.LigneMotif l, int ligne, Tuile t){
         for(Case c : fab){
             if (t.getCouleur().equals(c.getTuile().getCouleur())){
-                l.remplirLigne(c.getTuile(), ligne);
+                l.remplirLigneT(c.getTuile(), ligne);
             }
         }
         if (estVide()) return true;
@@ -44,7 +46,32 @@ public class Fabrique {
     }
 
     boolean estVide(){
-        return !(estPleine());
+        for(Case ca : fab){
+            if(!ca.estVide()) return false;
+        }
+        return true;
+    }
+
+    public ArrayList<Tuile> prendreTuile( String couleur) {
+        ArrayList<Tuile> t = null;
+        if (!this.estVide()) {
+            t = new ArrayList<>();
+            for(Case ca : fab){
+                if(ca.getTuile().getCouleur().equals(couleur)){
+                    t.add(ca.getTuile());
+                }
+            }
+
+        }
+        return t;
+    }
+
+    public void clear(String couleur){
+        for(Case ca : fab){
+            if(ca.getTuile().getCouleur().equals(couleur)){
+                ca.setTuile(new Tuile("empty"));
+            }
+        }
     }
 
     public static void main(String[] args) {
@@ -54,6 +81,5 @@ public class Fabrique {
         f.ajouter(s);
         for(Case c : f.fab) System.out.println(c);
         System.out.println(s.taille());
-
     }
 }

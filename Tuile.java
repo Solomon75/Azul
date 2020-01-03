@@ -6,5 +6,6 @@ public class Tuile {
     }
 
     String getCouleur(){return color;}
+    void setColor(String col){color = col;}
 
 }

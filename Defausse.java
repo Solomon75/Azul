@@ -9,4 +9,5 @@ public class Defausse{
     boolean estVide(){return def.isEmpty();}
 
     Tuile envoyer(){return def.remove(0);}
+    void ajouter(Tuile t){def.add(t);}
 }

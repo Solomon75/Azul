@@ -7,15 +7,15 @@ public class Sac {
         sac = new ArrayList<>();
         for(int i = 0; i < 100; i++){
             if(i < 20){
-                sac.add(new Tuile("bleu"));
+                sac.add(new Tuile("blue"));
             } if (i <= 40 && i >= 20) {
-                sac.add(new Tuile("vert"));
+                sac.add(new Tuile("yellow"));
             } if (i <= 60 && i > 40){
-                sac.add(new Tuile("rouge"));
+                sac.add(new Tuile("red"));
             } if (i <= 80 && i > 60){
-                sac.add(new Tuile("noir"));
+                sac.add(new Tuile("black"));
             } if (i > 80){
-                sac.add(new Tuile("blanc"));
+                sac.add(new Tuile("white"));
             }
         }
         Collections.shuffle(sac);
